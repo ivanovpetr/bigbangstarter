@@ -1,32 +1,57 @@
 <template>
   <div id="nav">
     <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <router-link to="/campaign">Campaign</router-link>
   </div>
   <router-view/>
 </template>
 
+<script lang="ts">
+import {Vue} from "vue-class-component";
+
+export default class App extends Vue {
+  mounted(){
+    this.$store.dispatch('account/init')
+  }
+}
+</script>
+
 <style>
 @import'~bootstrap/dist/css/bootstrap.css';
 
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+@media screen{
+  .container{max-width:1160px;margin:0 auto;padding:0 30px;}
+  .button{border-radius:100px;padding:12px 16px;border:1px solid;display:inline-block;font-size:14px;line-height:20px;font-weight:600;}
+  .button.button--block{display:block;text-align:center;width:100%;}
+  .button.button--disabled,.button:disabled{cursor:default;pointer-events:none;}
+  .button.button--primary svg *{fill: #ffffff;}
+  .button.button--primary.button--disabled,.button.button--primary:disabled{background-color:#ff9ab2;border-color:#ff9ab2;}
+  .button svg{margin-top:-2px;}
+  .button.button--balance{display:inline-flex;align-items:center;padding:8px 16px;}
+  .button.button--balance .address{font-size:12px;line-height:18px;display:inline-flex;align-items:center;padding:5px 12px;border-radius:100px;margin-left:8px;}
+  .button.button--balance .address svg{margin-left:8px;}
+  .button.button--balance .address{background-color:#ffeaef;color:black;}
+  .button.button--balance .address svg *{fill:black;}
+  .button.button--connect{color: #ffffff; background-color: transparent}
+  .button.button--balance{color: #ffffff; background-color: transparent}
 
-#nav {
-  padding: 30px;
-}
+  .countdown {
+    color: #333;
+    margin: 0 auto;
+    text-align: center;
+  }
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+  .countdown-section {
+    display: inline-block;
+    font-size: 10px;
+    list-style-type: none;
+    padding: 1em;
+    text-transform: uppercase;
+  }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
+  .countdown-section span {
+    display: block;
+    font-size: 2rem;
+  }
 }
 </style>
