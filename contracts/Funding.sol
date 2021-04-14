@@ -29,6 +29,10 @@ contract Funding is Ownable {
         _;
     }
 
+    function getCampaigns() public view returns (Campaign[] memory) {
+        return campaigns;
+    }
+
     function getCampaign(uint256 campaignId) public view returns (Campaign memory campaign) {
         Campaign memory c = campaigns[campaignId];
         return c;

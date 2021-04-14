@@ -7,7 +7,7 @@
             <span class="col-4 badge bg-info text-dark">In progress</span>
           </div>
           <div class="row">
-            <h2 class="fs-2 text-dark mb-3 display-6 lh-1 fw-bold">Campaign 1</h2>
+            <h2 class="fs-2 text-dark mb-3 display-6 lh-1 fw-bold">Campaign {{campaign.id}}</h2>
           </div>
           <div class="row">
             <div class="col">
@@ -15,24 +15,24 @@
             </div>
           </div>
           <div class="row text-dark text-center">
-            <div class="col countdown-section"><span>1</span>days</div>
-            <div class="col countdown-section"><span>3</span>Hours</div>
-            <div class="col countdown-section"><span>12</span>Minutes</div>
-            <div class="col countdown-section"><span>33</span>Seconds</div>
+            <div class="col countdown-section"><span>{{timeLeft.days()}}</span>days</div>
+            <div class="col countdown-section"><span>{{timeLeft.hours()}}</span>Hours</div>
+            <div class="col countdown-section"><span>{{timeLeft.minutes()}}</span>Minutes</div>
+            <div class="col countdown-section"><span>{{timeLeft.seconds()}}</span>Seconds</div>
           </div>
           <div class="row">
             <div class="col">
               <div class="progress">
-                <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar" role="progressbar" v-bind:style="{width: fundedPercentage + '%'}"  v-bind:aria-valuenow="fundedPercentage" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col">
-              <p class="text-dark">500/900</p>
+              <p class="text-dark">{{fundedEthers}}/{{ targetEthers }}</p>
             </div>
             <div class="col">
-              <p class="text-dark text-end">25%</p>
+              <p class="text-dark text-end">{{fundedPercentage}}%</p>
             </div>
           </div>
         </div>
@@ -43,12 +43,47 @@
 </template>
 
 <script lang="ts">
-import {Options, Vue} from "vue-class-component";
-@Options({
+import {defineComponent, computed, PropType} from 'vue'
+import {CampaignData} from "@/store/modules/campaigns"
+import moment from "moment"
+import Web3 from "web3"
+import BN from "bn.js"
+
+export default defineComponent({
   name: "CampaignWidget",
-},)
-export default class CampaignWidget extends Vue {
-}
+  props: {
+    campaign: {
+      type: Object as PropType<CampaignData>,
+      required: true
+    }
+  },
+  setup(props) {
+    const targetEthers = computed(() => {
+      return Web3.utils.fromWei(props.campaign.target, "ether")
+    })
+    const fundedEthers = computed(() => {
+      return Web3.utils.fromWei(props.campaign.funded, "ether")
+    })
+    const fundedPercentage = computed(() => {
+      return props.campaign.funded.div(props.campaign.target.div(new BN(100))).toNumber()
+    })
+    const timeLeft = computed(() => {
+      const campaignDatesDiff = props.campaign.startedAt.diff(props.campaign.finishedAt)
+      if (campaignDatesDiff > 0) {
+        return moment.duration(campaignDatesDiff)
+      } else {
+        return moment.duration(0)
+      }
+    })
+
+    return {
+      targetEthers,
+      fundedEthers,
+      fundedPercentage,
+      timeLeft
+    }
+  }
+})
 </script>
 
 <style scoped>

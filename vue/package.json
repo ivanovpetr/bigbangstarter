@@ -7,7 +7,6 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "@snapshot-labs/lock": "github:snapshot-labs/lock#a3694bb6b6e615968ee6e04e9a97007eace18c28",
     "@types/bootstrap": "^5.0.12",
     "@types/jquery": "^3.5.5",
     "bootstrap": "^5.0.0-beta3",

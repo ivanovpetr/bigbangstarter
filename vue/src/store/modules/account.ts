@@ -1,6 +1,6 @@
 import { ActionContext } from 'vuex';
 import { RootState } from '@/store';
-import Web3 from 'web3';
+import Web3 from '@/api/web3';
 
 
 export interface AccountState {
@@ -62,18 +62,16 @@ const actions = {
             });
             provider.on('accountsChanged', async () => {
                 //commit('clear');
-                dispatch('saveProvider', provider);
+                await dispatch('saveProvider', provider);
             });
             provider.on('disconnect', async () => {
                 dispatch('disconnect');
             });
         }
-        const web3Provider = new Web3(provider)
-        const accounts = await web3Provider.eth.getAccounts()
-        const account = accounts[0]
+        const account = provider.selectedAddress
         let balance
         if (account) {
-            balance =  await web3Provider.eth.getBalance(account)
+            balance =  await Web3.eth.getBalance(account)
         } else {
             balance = '0'
         }

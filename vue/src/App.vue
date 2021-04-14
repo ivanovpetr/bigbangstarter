@@ -12,6 +12,7 @@ import {Vue} from "vue-class-component";
 export default class App extends Vue {
   mounted(){
     this.$store.dispatch('account/init')
+    this.$store.dispatch('campaigns/init')
   }
 }
 </script>
